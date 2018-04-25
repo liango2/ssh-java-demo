@@ -1,11 +1,12 @@
 /**
- * 
+ *
  */
 package com.asd.ssh.demo;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,46 +25,46 @@ import expect4j.matches.TimeoutMatch;
 /**
  * <code>
  * String cmd[] = {"pwd","ifconfig"};<br/>
- * 
+ * <p>
  * Shell shell = new Shell(ip,port,user,password);<br/>
- * 
+ * <p>
  * shell.executeCommands(cmd);<br/>
- * 
+ * <p>
  * String response=shell.getResponse();<br/>
- * 
+ * <p>
  * shell.disconnect();
  * </code>
  */
 public class Shell {
 
-    private static Logger      log                              = LoggerFactory.getLogger(Shell.class);
+    private static Logger log = LoggerFactory.getLogger(Shell.class);
 
-    private Session            session;
-    private ChannelShell       channel;
-    private static Expect4j    expect                           = null;
-    private static final long  defaultTimeOut                   = 1000;
-    private StringBuffer       buffer                           = new StringBuffer();
+    private Session session;
+    private ChannelShell channel;
+    private static Expect4j expect = null;
+    private static final long defaultTimeOut = 1000;
+    private StringBuffer buffer = new StringBuffer();
 
-    public static final int    COMMAND_EXECUTION_SUCCESS_OPCODE = -2;
-    public static final String BACKSLASH_R                      = "\r";
-    public static final String BACKSLASH_N                      = "\n";
-    public static final String COLON_CHAR                       = ":";
-    public static String       ENTER_CHARACTER                  = BACKSLASH_R;
-    public static final int    SSH_PORT                         = 22;
+    public static final int COMMAND_EXECUTION_SUCCESS_OPCODE = -2;
+    public static final String BACKSLASH_R = "\r";
+    public static final String BACKSLASH_N = "\n";
+    public static final String COLON_CHAR = ":";
+    public static String ENTER_CHARACTER = BACKSLASH_R;
+    public static final int SSH_PORT = 22;
 
     // 正则匹配，用于处理服务器返回的结果
-    public static String[]     linuxPromptRegEx                 = new String[] { "~]#", "~#", "#", ":~#", "/$", ">" };
+    public static String[] linuxPromptRegEx = new String[]{"~]#", "~#", "#", ":~#", "/$", ">"};
 
-    public static String[]     errorMsg                         = new String[] { "could not acquire the config lock " };
+    public static String[] errorMsg = new String[]{"could not acquire the config lock "};
 
     // ssh服务器的ip地址
-    private String             ip;
+    private String ip;
     // ssh服务器的登入端口
-    private int                port;
+    private int port;
     // ssh服务器的登入用户名
-    private String             user;
+    private String user;
     // ssh服务器的登入密码
-    private String             password;
+    private String password;
 
     public Shell(String ip, int port, String user, String password) {
         this.ip = ip;
@@ -87,7 +88,7 @@ public class Shell {
 
     /**
      * 获取服务器返回的信息
-     * 
+     *
      * @return 服务端的执行结果
      */
     public String getResponse() {
@@ -121,7 +122,7 @@ public class Shell {
 
     /**
      * 执行配置命令
-     * 
+     *
      * @param commands 要执行的命令，为字符数组
      * @return 执行是否成功
      */
@@ -140,9 +141,9 @@ public class Shell {
         Closure closure = new Closure() {
             public void run(ExpectState expectState) throws Exception {
                 buffer.append(expectState.getBuffer());// buffer is string
-                                                       // buffer for appending
-                                                       // output of executed
-                                                       // command
+                // buffer for appending
+                // output of executed
+                // command
                 expectState.exp_continue();
 
             }
@@ -152,9 +153,9 @@ public class Shell {
         if (regEx != null && regEx.length > 0) {
             synchronized (regEx) {
                 for (String regexElement : regEx) {// list of regx like, :>, />
-                                                   // etc. it is possible
-                                                   // command prompts of your
-                                                   // remote machine
+                    // etc. it is possible
+                    // command prompts of your
+                    // remote machine
                     try {
                         RegExpMatch mat = new RegExpMatch(regexElement, closure);
                         lstPattern.add(mat);
@@ -165,8 +166,8 @@ public class Shell {
                     }
                 }
                 lstPattern.add(new EofMatch(new Closure() { // should cause
-                                                            // entire page to be
-                                                            // collected
+                    // entire page to be
+                    // collected
                     public void run(ExpectState state) {
                     }
                 }));

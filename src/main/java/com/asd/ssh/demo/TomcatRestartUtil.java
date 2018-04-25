@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.asd.ssh.demo;
 
@@ -7,20 +7,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
  * @author <a href="mailto:wengyj@59store.com">翁英健</a>
  * @version 1.1 2015年11月27日
  * @since 1.1
  */
 public class TomcatRestartUtil {
 
-    private static Logger       logger                      = new Logger();
-    public static final int     PORT_DEFAULT                = 8080;
-    private static final String CMD_CHECK_PORT_PREFIX       = "netstat -anp|grep ";
-    private static final String CMD_START_CATALINA_SUFFIX   = "bin/startup.sh";
-    private static final String CMD_PRINT_LOG_PREFIX        = "tail -f ";
+    private static Logger logger = new Logger();
+    public static final int PORT_DEFAULT = 8080;
+    private static final String CMD_CHECK_PORT_PREFIX = "netstat -anp|grep ";
+    private static final String CMD_START_CATALINA_SUFFIX = "bin/startup.sh";
+    private static final String CMD_PRINT_LOG_PREFIX = "tail -f ";
     private static final String CMD_LOG_FILE_DEFAULT_SUFFIX = "/logs/catalina.out";
-    private static final String CMD_KILL_PROCESS_PREFIX     = "kill ";
+    private static final String CMD_KILL_PROCESS_PREFIX = "kill ";
 
     public static void restart(String host, int sshPort, String user, String password, String catalinaHome, int catalinaPort, String loggerFile)
             throws Exception {
@@ -39,7 +38,7 @@ public class TomcatRestartUtil {
             logger.debug("发现端口号为{}的tomcat进程,杀死{}进程，启动tomcat", catalinaPort, pid);
             String killCmd = CMD_KILL_PROCESS_PREFIX + pid;
             logger.debug("执行了杀死进程的命令：" + killCmd);
-            ssh.execute(new String[] { killCmd, startBash });
+            ssh.execute(new String[]{killCmd, startBash});
         }
         // 3.控制台打印日志
         String logCmd = CMD_PRINT_LOG_PREFIX + loggerFile;
@@ -53,7 +52,7 @@ public class TomcatRestartUtil {
 
     /**
      * 分析netstat -anp | grep 8080 得到的字符串，解析出pid返回
-     * 
+     *
      * @param portResult
      * @return
      */
